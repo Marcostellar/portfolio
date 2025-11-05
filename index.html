@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Marco Stellar — Portfolio</title>
+  <meta name="description" content="Marco Stellar — Full‑stack web developer. Elegant, accessible portfolio showcasing projects, skills and contact." />
+  <meta property="og:title" content="Marco Stellar — Portfolio" />
+  <meta property="og:description" content="Full‑stack web developer. Elegant, accessible portfolio." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="favicon.ico" />
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Variables */
+    :root{
+      --bg: #f6f8fb; --card: rgba(255,255,255,0.75); --glass: 16px;
+      --text: #0f1724; --muted: #6b7280; --accent: #0066ff;
+      --neon: #00d4ff;
+      --radius: 14px;
+      --glass-blur: 8px;
+    }
+    [data-theme="dark"]{
+      --bg:#071018; --card: rgba(2,8,12,0.45); --text:#cfefff; --muted:#9fb7c6; --accent: #66e0ff;
+      background-image: radial-gradient(ellipse at 10% 10%, rgba(0,212,255,0.06), transparent 8%),
+                        radial-gradient(ellipse at 90% 80%, rgba(255,255,255,0.02), transparent 12%);
+    }
+
+    /* Base */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue","Noto Sans",sans-serif;
+      background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale; scroll-behavior:smooth;
+      padding-top:72px; /* header space */
+    }
+
+    /* Header / Nav */
+    header{
+      --h:72px;
+      height:var(--h); width:100%;
+      position:fixed; top:0; left:0; z-index:1200;
+      display:flex; align-items:center; gap:16px; padding:12px 20px;
+      backdrop-filter: blur(var(--glass-blur)); background:linear-gradient(180deg, rgba(255,255,255,0.45), rgba(255,255,255,0.15));
+      border-bottom:1px solid rgba(0,0,0,0.06);
+    }
+    [data-theme="dark"] header{
+      background:linear-gradient(180deg, rgba(2,8,12,0.5), rgba(2,8,12,0.25));
+      border-bottom:1px solid rgba(0,0,0,0.25);
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px; margin-right:auto;
+      text-decoration:none; color:inherit;
+    }
+    .logo{
+      width:44px; height:44px; border-radius:10px; display:grid; place-items:center;
+      font-family:Poppins, Inter; font-weight:700; background:linear-gradient(135deg,var(--accent),#7b61ff); color:white;
+      box-shadow: 0 6px 18px rgba(16,24,40,0.12);
+    }
+    nav{display:flex; gap:12px; align-items:center;}
+    nav a{color:var(--muted); text-decoration:none; padding:8px 10px; border-radius:8px; font-weight:600; font-size:15px}
+    nav a:hover, nav a.active{color:var(--text); background:rgba(0,0,0,0.04)}
+
+    /* Mobile menu */
+    .hamburger{display:none; width:44px; height:44px; border-radius:10px; background:transparent; border:0}
+    @media (max-width:840px){
+      nav{display:none}
+      .hamburger{display:inline-grid}
+      .mobile-drawer{position:fixed; inset:0; z-index:1400; display:none}
+      .mobile-drawer.open{display:block}
+      .drawer-panel{
+        width:min(300px,80%); height:100%; background:var(--card); backdrop-filter:blur(6px);
+        padding:28px; box-shadow:8px 0 30px rgba(2,8,15,0.35);
+      }
+      .drawer-backdrop{position:fixed; inset:0; background:rgba(2,8,15,0.35)}
+    }
+
+    /* Layout */
+    .container{max-width:1100px; margin:0 auto; padding:36px 20px; display:grid; gap:28px}
+    section.card{
+      background:var(--card); border-radius:var(--radius); padding:24px; box-shadow:0 6px 20px rgba(15, 23, 36, 0.06);
+      border:1px solid rgba(255,255,255,0.06);
+      transition:transform .4s ease, box-shadow .3s ease, opacity .4s ease;
+      opacity:0; transform:translateY(18px);
+    }
+    section.card.in-view{opacity:1; transform:none}
+
+    /* Hero */
+    #hero{
+      min-height:calc(100vh - 72px); display:grid; place-items:center; padding:64px 20px;
+      border-radius:18px; position:relative; overflow:hidden;
+      background:linear-gradient(135deg,#eef6ff 0%, #f8fbff 40%, #fff 100%);
+    }
+    [data-theme="dark"] #hero{ background:linear-gradient(180deg, rgba(0,12,24,0.4), rgba(0,0,8,0.2)); }
+
+    .hero-grid{display:grid; grid-template-columns:1fr 380px; gap:32px; align-items:center; width:100%; max-width:1100px}
+    @media (max-width:880px){ .hero-grid{grid-template-columns:1fr} }
+
+    .hero-title{font-family:Poppins, Inter; font-size:clamp(28px, 5vw, 48px); line-height:1.02; margin:0}
+    .hero-lead{color:var(--muted); margin-top:10px; font-size:clamp(15px,2.4vw,18px)}
+
+    /* Typewriter */
+    .typewriter{display:inline-block; border-right:2px solid rgba(0,0,0,0.12); padding-right:6px; white-space:nowrap; overflow:hidden}
+    [data-theme="dark"] .typewriter{border-right-color:rgba(255,255,255,0.12)}
+
+    /* Resume button (floating) */
+    .resume{
+      display:inline-flex; gap:10px; align-items:center; padding:12px 16px; border-radius:12px;
+      background:linear-gradient(90deg,var(--accent),#7b61ff); color:white; text-decoration:none; font-weight:700;
+      box-shadow:0 10px 30px rgba(99,102,241,0.18);
+    }
+
+    /* About */
+    .about-flex{display:grid; grid-template-columns:1fr 260px; gap:28px; align-items:center}
+    @media (max-width:880px){ .about-flex{grid-template-columns:1fr} }
+    .avatar{
+      width:220px; height:220px; border-radius:50%; overflow:hidden; display:block; grid-row:1/1; justify-self:center;
+      transition:transform .6s ease, box-shadow .35s ease; box-shadow:0 12px 30px rgba(2,8,15,0.08);
+    }
+    .avatar img{width:100%; height:100%; object-fit:cover; display:block}
+    .avatar:hover{transform:scale(1.04); box-shadow:0 20px 50px rgba(0,212,255,0.08); filter:drop-shadow(0 0 18px rgba(0,212,255,0.06))}
+
+    /* Skills marquee + pills */
+    .skills-marquee{
+      overflow:hidden; white-space:nowrap; padding:10px 0; border-radius:10px; background:linear-gradient(90deg,rgba(0,0,0,0.02),transparent);
+    }
+    .skills-track{display:inline-flex; gap:18px; animation:scroll 14s linear infinite}
+    .skill-pill{display:inline-block; padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.85); cursor:pointer; font-weight:600; color:var(--text)}
+    .skill-pill:hover{transform:translateY(-4px)}
+    @keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+    /* Timeline */
+    .timeline{position:relative; padding-left:28px; border-left:2px dashed rgba(0,0,0,0.06)}
+    .timeline::before{content:""; position:absolute; left:-1px; top:0; width:2px; height:100%; background:linear-gradient(var(--accent), transparent); transform-origin:top; animation:lineDraw 1s ease forwards}
+    @keyframes lineDraw{from{transform:scaleY(0)} to{transform:scaleY(1)}}
+    .timeline-item{position:relative; margin:18px 0; padding-left:20px}
+    .timeline-item::before{content:""; position:absolute; left:-11px; top=4px; width:16px; height:16px; border-radius:50%; background:var(--accent); box-shadow:0 6px 18px rgba(0,102,255,0.12)}
+
+    /* Fun facts carousel */
+    .carousel{display:flex; gap:12px; overflow:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; padding-bottom:8px}
+    .fact{min-width:260px; scroll-snap-align:center; padding:18px; border-radius:12px; background:linear-gradient(180deg, #fff, #fbfdff); display:flex; align-items:center; justify-content:center; font-weight:700}
+    [data-theme="dark"] .fact{background:rgba(255,255,255,0.02)}
+
+    /* Contact */
+    form{display:grid; gap:10px}
+    input,textarea{padding:12px;border-radius:10px;border:1px solid rgba(11,20,30,0.06);background:transparent;color:var(--text)}
+    textarea{min-height:120px;resize:vertical}
+    .toast{position:fixed; right:20px; bottom:20px; background:linear-gradient(90deg,var(--accent),#7b61ff); color:white; padding:12px 16px; border-radius:10px; box-shadow:0 8px 30px rgba(16,24,40,0.2); transform:translateY(20px); opacity:0; transition:all .36s ease;}
+    .toast.show{transform:none;opacity:1}
+
+    /* Back to top FAB */
+    .fab{position:fixed; right:20px; bottom:20px; width:56px; height:56px; border-radius:14px; display:grid; place-items:center; background:var(--card); box-shadow:0 10px 30px rgba(2,8,15,0.12); border:1px solid rgba(255,255,255,0.04); opacity:0; transform:translateY(18px); transition:all .28s ease; z-index:1200}
+    .fab.visible{opacity:1; transform:none}
+
+    /* small helpers */
+    .muted{color:var(--muted)}
+    h2{font-family:Poppins,Inter; margin:0 0 8px 0}
+    p{margin:0 0 12px 0; color:var(--muted)}
+    /* Intersection observer reveal */
+    .reveal{will-change:opacity,transform}
+  </style>
+</head>
+<body>
+  <header>
+    <a class="brand" href="#">
+      <div class="logo">MS</div>
+      <div>
+        <div style="font-weight:700">Marco Stellar</div>
+        <div style="font-size:12px;color:var(--muted)">Full‑stack web developer</div>
+      </div>
+    </a>
+
+    <nav>
+      <a href="#hero">Home</a>
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#fun-facts">Fun</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <button class="hamburger" aria-label="Open menu" id="hamburger">
+      <svg width="20" height="14" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg"><rect y="1" width="20" height="2" rx="1" fill="currentColor"/><rect y="6" width="20" height="2" rx="1" fill="currentColor"/><rect y="11" width="20" height="2" rx="1" fill="currentColor"/></svg>
+    </button>
+
+    <button id="themeToggle" aria-label="Toggle theme" title="Toggle theme" style="margin-left:8px; background:transparent; border:0; width:44px; height:44px; border-radius:10px;">
+      <!-- sun/moon icons toggled via JS -->
+      <svg id="themeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </header>
+
+  <!-- Mobile drawer -->
+  <div class="mobile-drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-backdrop" id="drawerBack"></div>
+    <div class="drawer-panel">
+      <nav style="display:flex;flex-direction:column;gap:10px">
+        <a href="#hero" class="drawer-link">Home</a>
+        <a href="#about" class="drawer-link">About</a>
+        <a href="#projects" class="drawer-link">Projects</a>
+        <a href="#contact" class="drawer-link">Contact</a>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <!-- Hero -->
+    <section id="hero" class="card reveal">
+      <div class="hero-grid">
+        <div>
+          <h1 class="hero-title">Hello, I'm <span style="color:var(--accent)">Marco Stellar</span></h1>
+          <p class="hero-lead">I design and build fast, accessible web experiences. I love clean code, delightful UI and tiny performance budgets.</p>
+          <p style="margin-top:14px;">
+            <span class="typewriter" id="typewriter" aria-hidden="true"></span>
+          </p>
+          <div style="margin-top:18px; display:flex; gap:12px; align-items:center">
+            <a class="resume" href="resume.pdf" download>Download Résumé</a>
+            <a class="resume" href="#contact" style="background:transparent;color:var(--accent);border:1px solid rgba(0,0,0,0.06)">Hire Me</a>
+          </div>
+        </div>
+
+        <aside style="display:grid;place-items:center;">
+          <div style="width:100%; max-width:360px; text-align:center" aria-hidden="true">
+            <div style="background:linear-gradient(180deg,#fff,#f4fbff); padding:14px; border-radius:14px; box-shadow:0 16px 50px rgba(7,12,20,0.06);">
+              <p style="margin:0;font-weight:700">Available for freelance</p>
+              <p class="muted" style="margin-top:6px;font-size:13px">Rates & timelines on request</p>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="card reveal">
+      <div class="about-flex">
+        <div>
+          <h2>About Me</h2>
+
+          <p>
+            Hi, I’m <strong>Peculiar Marcellinus</strong> also known <em>Marco Stellar</em> — a dedicated <strong>Front‑End Developer</strong> with over
+            <strong>2 years of hands‑on experience</strong> building clean, responsive, and user‑focused static websites.
+            I specialize in crafting fast, accessible, pixel‑perfect web experiences using <em>HTML5, CSS3, and modern JavaScript (ES6+)</em>
+            without relying on heavy frameworks.
+          </p>
+
+          <p>
+            I’m deeply passionate about <strong>Web3</strong> and the future of the decentralized web. I’m actively exploring blockchain
+            integration, smart contracts, and how front‑end interfaces can seamlessly connect with blockchain ecosystems to build
+            transparent, trustless, and user‑owned applications.
+          </p>
+
+          <p>
+            Deployment is second nature — I use <strong>GitHub, Netlify, and Vercel</strong> to ship polished, production‑ready sites with
+            automated workflows, custom domains, and continuous deployment. Every project I deliver is optimized for performance,
+            accessibility, and real‑world impact.
+          </p>
+
+          <p>
+            Though I focus on vanilla technologies today, I’m always learning — experimenting with new tools and staying ahead of web
+            standards. Currently expanding into <strong>dApp front‑ends</strong> and blockchain‑connected UIs. Let’s build the
+            decentralized web — one line of code at a time.
+          </p>
+        </div>
+
+        <div style="display:flex;justify-content:center;align-items:center">
+          <a class="avatar" href="#" title="Marco Stellar">
+            <img src="C:\Users\patrick\Desktop\portfolio\personal-portfolio\IMG_20251103_212613_844.jpg" alt="Marco Stellar portrait"  width="720" height="720">
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills" class="card reveal">
+      <h2>Skills</h2>
+      <div class="skills-marquee" aria-hidden="true">
+        <div class="skills-track" id="skillsTrack">
+          <!-- repeated to create continuous scroll -->
+          <span class="skill-pill" data-skill="all">All</span>
+          <span class="skill-pill" data-skill="js">JavaScript</span>
+          <span class="skill-pill" data-skill="python">Python</span>
+          <span class="skill-pill" data-skill="css">CSS</span>
+          <span class="skill-pill" data-skill="design">Design</span>
+          <span class="skill-pill" data-skill="testing">Testing</span>
+          <span class="skill-pill" data-skill="perf">Performance</span>
+          <!-- repeat for continuous scroll -->
+          <span class="skill-pill" data-skill="all">All</span>
+          <span class="skill-pill" data-skill="js">JavaScript</span>
+          <span class="skill-pill" data-skill="python">Python</span>
+        </div>
+      </div>
+      <small class="muted">Click a skill to filter projects (projects section removed).</small>
+    </section>
+
+
+    <!-- Contact -->
+    <section id="contact" class="card reveal">
+      <h2>Contact</h2>
+      <form id="contactForm" action="https://formspree.io/f/your-id" method="POST" novalidate>
+        <input type="text" name="name" id="name" placeholder="Your name" required />
+        <input type="email" name="_replyto" id="email" placeholder="you@company.com" required />
+        <textarea name="message" id="message" placeholder="Tell me about your project" required></textarea>
+        <div style="display:flex;gap:8px">
+          <button type="submit" class="resume" style="background:var(--accent); border-radius:10px">Send message</button>
+          <button type="button" class="btn-ghost" onclick="window.location='mailto:hello@marcostellar.dev'">Email</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <div class="fab" id="topFab" title="Back to top" aria-hidden="true">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 5l7 7-1.4 1.4L13 9.8V20h-2V9.8L6.4 13.4 5 12l7-7z" fill="currentColor"/></svg>
+  </div>
+
+  <div class="toast" id="toast">Message sent — thanks!</div>
+
+  <script>
+    // Magic happens here ✨ — tiny helpers
+    const qs = s => document.querySelector(s);
+    const qsa = s => Array.from(document.querySelectorAll(s));
+
+    // Typewriter (no library)
+    (function typewriter(){
+      const el = qs('#typewriter');
+      const phrases = ['I build fast websites.','I care about accessibility.','I obsess over tiny UX details.'];
+      let i=0, j=0, dir=1;
+      function tick(){
+        const txt = phrases[i];
+        el.textContent = txt.slice(0, j);
+        if (dir===1){ j++; if(j>txt.length){ dir=-1; setTimeout(tick,1200); return } }
+        else { j--; if(j<0){ dir=1; i=(i+1)%phrases.length } }
+        setTimeout(tick, dir===1?80:30);
+      }
+      tick();
+    })();
+
+    // Dark mode persistence
+    (function theme(){
+      const root = document.documentElement;
+      const toggle = qs('#themeToggle');
+      const icon = qs('#themeIcon');
+      const stored = localStorage.getItem('theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      function apply(t){
+        if(t==='dark'){ root.setAttribute('data-theme','dark'); icon.innerHTML = '<path d=\"M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z\" fill=\"currentColor\"/>' }
+        else { root.removeAttribute('data-theme'); icon.innerHTML = '<path d=\"M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>' }
+      }
+      apply(stored);
+      toggle.addEventListener('click', ()=>{ const next = document.documentElement.getAttribute('data-theme')==='dark' ? 'light' : 'dark'; localStorage.setItem('theme', next); apply(next) })
+    })();
+
+    // Smooth scroll for internal links (one-liner)
+    qsa('a[href^="#"]').forEach(a=>a.addEventListener('click', e=>{
+      const href = a.getAttribute('href'); if(href === '#') return;
+      const target = document.querySelector(href);
+      if(target){ e.preventDefault(); target.scrollIntoView({behavior:'smooth', block:'start'}); /* close drawer if open */ document.getElementById('drawer')?.classList.remove('open') }
+    }));
+
+    // Reveal on scroll (IntersectionObserver)
+    (function reveal(){
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){ e.target.classList.add('in-view'); io.unobserve(e.target) }
+        })
+      }, {threshold:0.12});
+      qsa('.reveal').forEach(el=>io.observe(el));
+    })();
+
+    // Drawer (mobile)
+    (function drawer(){
+      const btn = qs('#hamburger'), d = qs('#drawer'), back = qs('#drawerBack');
+      btn.addEventListener('click', ()=> d.classList.add('open'));
+      back.addEventListener('click', ()=> d.classList.remove('open'));
+      qsa('.drawer-link').forEach(l=>l.addEventListener('click', ()=> d.classList.remove('open')));
+    })();
+
+    // Skill filter
+    (function skillFilter(){
+      qsa('.skill-pill').forEach(p=>{
+        p.addEventListener('click', ()=> {
+          qsa('.skill-pill').forEach(x=>x.style.opacity=0.45); p.style.opacity=1;
+          const tag = p.dataset.skill;
+          qsa('.project-card').forEach(card=>{
+            if(tag==='all' || (card.dataset.tags||'').includes(tag)){ card.style.display='flex' } else { card.style.display='none' }
+          });
+        });
+      });
+    })();
+
+    // Coming soon confetti (small burst)
+    (function confetti(){
+      const el = qs('#comingSoon');
+      if(!el) return;
+      el.addEventListener('click', (e)=>{
+        burst(window.innerWidth/2, window.innerHeight/2);
+      });
+      function burst(cx,cy){
+        const count = 36; const colours = ['#ff8a65','#ffd25f','#7b61ff','#00d4ff','#66e0ff'];
+        for(let i=0;i<count;i++){
+          const p = document.createElement('div');
+          p.style.position='fixed'; p.style.left=cx+'px'; p.style.top=cy+'px';
+          p.style.width='10px'; p.style.height='10px'; p.style.borderRadius='3px'; p.style.background=colours[Math.floor(Math.random()*colours.length)];
+          p.style.transform = 'translate(-50%,-50%)';
+          p.style.zIndex = 9999; document.body.appendChild(p);
+          const dx = (Math.random()-0.5)*800, dy = (Math.random()-0.9)*600, rot = (Math.random()*720);
+          p.animate([{transform:`translate(-50%,-50%)`},{transform:`translate(${dx}px,${dy}px) rotate(${rot}deg)`}], {duration:900+Math.random()*800, easing:'cubic-bezier(.15,.85,.35,1)'});
+          setTimeout(()=>p.remove(),1800);
+        }
+      }
+    })();
+
+    // Contact form with validation + toast (no alert)
+    (function contact(){
+      const form = qs('#contactForm'), toast = qs('#toast');
+      form.addEventListener('submit', async (ev)=>{
+        ev.preventDefault();
+        const formData = new FormData(form);
+        // simple client-side validation
+        if(!formData.get('name')||!formData.get('_replyto')||!formData.get('message')){
+          showToast('Please complete the form');
+          return;
+        }
+        // POST to Formspree — gentle UX
+        try{
+          const res = await fetch(form.action, {method:'POST', body:formData, headers:{accept:'application/json'}});
+          if(res.ok){ form.reset(); showToast('Message sent — thanks!') }
+          else { showToast('Oops — try again later') }
+        }catch(err){ showToast('Network error') }
+      });
+      function showToast(text){
+        toast.textContent = text; toast.classList.add('show');
+        setTimeout(()=>toast.classList.remove('show'),2600);
+      }
+    })();
+
+    // Back to top FAB visibility
+    (function fab(){
+      const fab = qs('#topFab');
+      window.addEventListener('scroll', ()=> {
+        if(window.scrollY > 500) fab.classList.add('visible'); else fab.classList.remove('visible');
+      });
+      fab.addEventListener('click', ()=> window.scrollTo({top:0, behavior:'smooth'}));
+    })();
+
+    // Carousel swipe (pointer) — minimal
+    (function carouselSwipe(){
+      const sc = qs('#carousel'); if(!sc) return;
+      let down=false, startX=0, scrollLeft=0;
+      sc.addEventListener('pointerdown', e=>{ down=true; startX=e.pageX; scrollLeft=sc.scrollLeft; sc.setPointerCapture(e.pointerId) });
+      sc.addEventListener('pointermove', e=>{ if(!down) return; const dx = startX - e.pageX; sc.scrollLeft = scrollLeft + dx });
+      sc.addEventListener('pointerup', e=>{ down=false; sc.releasePointerCapture(e.pointerId) });
+      sc.addEventListener('pointercancel', ()=>down=false);
+    })();
+
+    // small accessibility: highlight nav on intersection
+    (function navHighlight(){
+      const sections = qsa('main section[id]');
+      const navlinks = qsa('header nav a');
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){
+            navlinks.forEach(a=>a.classList.toggle('active', a.getAttribute('href') === '#'+e.target.id));
+          }
+        });
+      }, {threshold:0.45});
+      sections.forEach(s=>io.observe(s));
+    })();
+
+    // smooth continuous marquee doesn't restart on hover
+    qs('#skillsTrack')?.addEventListener('mouseenter', e=> e.currentTarget.style.animationPlayState='paused');
+    qs('#skillsTrack')?.addEventListener('mouseleave', e=> e.currentTarget.style.animationPlayState='running');
+
+    // initial reveal tweak for small devices: mark first few visible
+    setTimeout(()=> qsa('.reveal').slice(0,3).forEach(el=>el.classList.add('in-view')), 180);
+
+    // Honor reduced motion
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      qsa('*').forEach(x=> x.style.animation='none');
+    }
+  </script>
+</body>
+</html>
